@@ -138,13 +138,31 @@ def meine_rezepte():
     if request.method == "GET":
         # Lädt alle Rezepte des aktuellen Benutzers aus der Datenbank
         rezepte = db_read("SELECT id, name, description FROM rezepte WHERE user_id=%s", (current_user.id,))
-        return render_template("main_page.html", rezepte=rezepte)
+        return render_template("rezepte.html", rezepte=rezepte)
 
     # POST: Neues Rezept hinzufügen
     name = request.form["name"]  # Holt Rezeptname aus Formular
     description = request.form["description"]  # Holt Beschreibung aus Formular
+    
     # Speichert neues Rezept in der Datenbank
-    db_write("INSERT INTO rezepte(user_id, name, description) VALUES (%s, %s, %s)", (current_user.id, name, description, ))
+    db_write("INSERT INTO rezepte(user_id, name, description) VALUES (%s, %s, %s)", (current_user.id, name, description))
+    
+    # Holt die ID des neu erstellten Rezepts
+    rezept = db_read("SELECT id FROM rezepte WHERE user_id=%s ORDER BY id DESC LIMIT 1", (current_user.id,), single=True)
+    rezept_id = rezept['id']
+    
+    # Speichert Zutaten (falls vorhanden)
+    zutat_names = request.form.getlist("zutat_name[]")
+    zutat_numbers = request.form.getlist("zutat_number[]")
+    zutat_einheiten = request.form.getlist("zutat_einheit[]")
+    
+    for i in range(len(zutat_names)):
+        if zutat_names[i].strip():  # Nur speichern wenn Name nicht leer
+            number = float(zutat_numbers[i]) if zutat_numbers[i] else None
+            einheit = zutat_einheiten[i] if zutat_einheiten[i] else None
+            db_write("INSERT INTO zutaten(rezept_id, name, number, einheit) VALUES (%s, %s, %s, %s)",
+                    (rezept_id, zutat_names[i], number, einheit))
+    
     return redirect(url_for("meine_rezepte"))  # Lädt Seite neu um neues Rezept anzuzeigen
 
 @app.route("/einkaufsliste")
