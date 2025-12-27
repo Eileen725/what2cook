@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron" style="background-color: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+  <h1>Willkommen bei what2cook! 🍳</h1>
+  <p class="lead" style="font-size: 18px; margin-top: 20px;">
+    Deine persönliche Rezeptsammlung - einfach, übersichtlich und immer griffbereit.
+  </p>
+  
+  <hr style="margin: 30px 0;">
+  
+  <div style="font-size: 16px; line-height: 1.8;">
+    <h3>Was kannst du hier machen?</h3>
+    <ul style="list-style: none; padding-left: 0;">
+      <li style="margin: 15px 0;">
+        🍽️ <strong>Rezepte verwalten:</strong> Speichere all deine Lieblingsrezepte an einem Ort
+      </li>
+      <li style="margin: 15px 0;">
+        📝 <strong>Details anzeigen:</strong> Klicke auf ein Rezept, um Zutaten und Zubereitung zu sehen
+      </li>
+      <li style="margin: 15px 0;">
+        🛒 <strong>Einkaufsliste:</strong> Plane deine Einkäufe direkt aus deinen Rezepten (kommt bald!)
+      </li>
+    </ul>
+  </div>
+  
+  <p style="margin-top: 40px;">
+    <a class="btn btn-primary btn-lg" href="{{ url_for('meine_rezepte') }}" role="button">
+      Zu meinen Rezepten →
+    </a>
+  </p>
+</div>
+
+<div style="margin-top: 30px; padding: 20px; background-color: #f0f8ff; border-radius: 8px; border-left: 4px solid #5bc0de;">
+  <h4>💡 Tipp</h4>
+  <p style="margin-bottom: 0;">
+    Nutze das Menü oben, um zwischen deinen Rezepten und der Einkaufsliste zu wechseln!
+  </p>
+</div>
+{% endblock %}

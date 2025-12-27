@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+  <h1>🛒 Einkaufsliste</h1>
+  
+  <div style="margin-top: 30px; padding: 40px; background-color: #f9f9f9; border-radius: 8px; text-align: center;">
+    <h3 style="color: #999;">Diese Funktion kommt bald!</h3>
+    <p style="color: #666; margin-top: 15px;">
+      Hier kannst du bald deine Einkaufsliste aus deinen Rezepten zusammenstellen.
+    </p>
+    
+    <a href="{{ url_for('meine_rezepte') }}" class="btn btn-primary" style="margin-top: 20px;">
+      Zurück zu meinen Rezepten
+    </a>
+  </div>
+</div>
+{% endblock %}

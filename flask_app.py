@@ -123,10 +123,16 @@ def logout():
 
 # ===== HAUPTFUNKTIONEN DER APP =====
 
-@app.route("/", methods=["GET", "POST"])
-@login_required  # Nur eingeloggte Benutzer können diese Seite sehen
+@app.route("/")
+@login_required
 def index():
-    """Hauptseite - Zeigt alle Rezepte des Benutzers an"""
+    """Startseite mit Einleitung"""
+    return render_template("home.html")
+
+@app.route("/rezepte", methods=["GET", "POST"])
+@login_required  # Nur eingeloggte Benutzer können diese Seite sehen
+def meine_rezepte():
+    """Meine Rezepte - Zeigt alle Rezepte des Benutzers an"""
     
     # GET: Zeigt die Rezept-Liste an
     if request.method == "GET":
@@ -139,7 +145,13 @@ def index():
     description = request.form["description"]  # Holt Beschreibung aus Formular
     # Speichert neues Rezept in der Datenbank
     db_write("INSERT INTO rezepte(user_id, name, description) VALUES (%s, %s, %s)", (current_user.id, name, description, ))
-    return redirect(url_for("index"))  # Lädt Seite neu um neues Rezept anzuzeigen
+    return redirect(url_for("meine_rezepte"))  # Lädt Seite neu um neues Rezept anzuzeigen
+
+@app.route("/einkaufsliste")
+@login_required
+def einkaufsliste():
+    """Einkaufsliste - Kommt später"""
+    return render_template("einkaufsliste.html")
 
 @app.post("/complete")
 @login_required  # Nur eingeloggte Benutzer
@@ -148,7 +160,7 @@ def complete():
     rezept_id = request.form.get("id")  # Holt die Rezept-ID aus dem Formular
     # Löscht das Rezept aus der Datenbank (nur wenn es dem Benutzer gehört)
     db_write("DELETE FROM rezepte WHERE user_id=%s AND id=%s", (current_user.id, rezept_id,))
-    return redirect(url_for("index"))  # Zurück zur Hauptseite
+    return redirect(url_for("meine_rezepte"))  # Zurück zur Rezeptliste
 
 
 
