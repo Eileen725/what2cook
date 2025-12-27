@@ -45,7 +45,7 @@
         </button>
         <h4 class="modal-title">Neues Rezept hinzufügen</h4>
       </div>
-      <form action="." method="POST">
+      <form action="{{ url_for('meine_rezepte') }}" method="POST">
         <div class="modal-body">
           <div class="form-group">
             <label for="name">Rezeptname *</label>
