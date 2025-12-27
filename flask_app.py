@@ -130,5 +130,17 @@ def complete():
     db_write("DELETE FROM rezepte WHERE user_id=%s AND id=%s", (current_user.id, rezept_id,))
     return redirect(url_for("index"))
 
+
+
+@app.route("/rezept/<int:rezept_id>", methods=["GET", "POST"])
+@login_required
+def rezept_detail(rezept_id):
+    # GET - Show recipe details
+    rezept = db_read("SELECT id, name, description FROM rezepte WHERE user_id=%s AND id=%s", (current_user.id, rezept_id), single=True)
+    if not rezept:
+        return "Rezept nicht gefunden", 404
+    
+    return render_template("rezept_detail.html", rezept=rezept)
+
 if __name__ == "__main__":
     app.run()

@@ -1,50 +1,44 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <ul class="todo-list">
-          {% for rezept in rezepte %}
-            <li class="todo-item">
-              <form action="/complete" method="POST" class="todo-complete-form">
+<ul class="todo-list">
+  {% for rezept in rezepte %}
+  <li class="todo-item">
+    <form action="/complete" method="POST" class="todo-complete-form">
 
-                <input type="hidden" name="id" value="{{ rezept.id }}">
+      <input type="hidden" name="id" value="{{ rezept.id }}">
 
-                <!-- Checkbox triggert Submit -->
-                <input
-                  type="checkbox"
-                  class="todo-checkbox"
-                  id="rezept-{{ rezept.id }}"
-                  name="complete"
-                  value="1"
-                  onchange="this.form.submit()">
+      <!-- Checkbox triggert Submit -->
+      <input type="checkbox" class="todo-checkbox" id="rezept-{{ rezept.id }}" name="complete" value="1"
+        onchange="this.form.submit()">
+      <a href="{{ url_for('rezept_detail', rezept_id=rezept.id) }}">
 
-                <label for="rezept-{{ rezept.id }}" class="todo-content">
-                  {{ rezept.name }}
-                  <span class="todo-date">{{ rezept.description }}</span>
-                </label>
-              </form>
-            </li>
-          {% else %}
-            <div>Keine Rezepte vorhanden...  🍳</div> 
-          {% endfor %}
-        </ul>
+        <label for="rezept-{{ rezept.id }}" class="todo-content">
+          {{ rezept.name }}
+          <span class="todo-date">{{ rezept.description }}</span>
+        </label>
+      </a>
+    </form>
+  </li>
+  {% else %}
+  <div>Keine Rezepte vorhanden... 🍳</div>
+  {% endfor %}
+</ul>
 
-      <div class="todo-form">
-        <form action="." method="POST">
-          <div class="form-group">
-            <label for="name">Rezeptname</label>
-            <input type="text" id="name" name="name" class="form-control"
-              placeholder="Neues Rezept eingeben…" required />
-          </div>
+<div class="todo-form">
+  <form action="." method="POST">
+    <div class="form-group">
+      <label for="name">Rezeptname</label>
+      <input type="text" id="name" name="name" class="form-control" placeholder="Neues Rezept eingeben…" required />
+    </div>
 
-          <div class="form-group">
-            <label for="description">Beschreibung</label>
-            <input id="description" name="description" type="text" class="form-control" required>
-            <p class="help-block">Kurze Beschreibung des Rezepts.</p>
-          </div>
+    <div class="form-group">
+      <label for="description">Beschreibung</label>
+      <input id="description" name="description" type="text" class="form-control" required>
+      <p class="help-block">Kurze Beschreibung des Rezepts.</p>
+    </div>
 
-          <button type="submit" class="btn btn-primary">Hinzufügen</button>
-        </form>
-      </div>
+    <button type="submit" class="btn btn-primary">Hinzufügen</button>
+  </form>
+</div>
 {% endblock %}
-
-      

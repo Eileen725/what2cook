@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+
+
+    <h1>{{ rezept.name }}</h1>
+    
+    {% if rezept.description %}
+    <p>{{ rezept.description }}</p>
+    {% endif %}
