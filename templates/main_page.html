@@ -16,12 +16,6 @@
 <ul class="rezept-list" id="rezept-list">
   {% for rezept in rezepte %}
   <li class="rezept-item" data-name="{{ rezept.name|lower }}" data-description="{{ rezept.description|lower }}">
-    <form action="/complete" method="POST" class="rezept-complete-form">
-      <input type="hidden" name="id" value="{{ rezept.id }}">
-      <input type="checkbox" class="rezept-checkbox" id="rezept-{{ rezept.id }}" name="complete" value="1"
-        onchange="this.form.submit()">
-    </form>
-
     <a href="{{ url_for('rezept_detail', rezept_id=rezept.id) }}" class="rezept-content">
       {{ rezept.name }}
       <span class="rezept-description">{{ rezept.description }}</span>
