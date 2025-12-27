@@ -4,8 +4,7 @@
 <ul class="todo-list">
   {% for rezept in rezepte %}
   <li class="todo-item">
-    <form action="/complete" method="POST" class="todo-complete-form">
-
+   
       <input type="hidden" name="id" value="{{ rezept.id }}">
 
       <!-- Checkbox triggert Submit -->
@@ -18,7 +17,7 @@
           <span class="todo-date">{{ rezept.description }}</span>
         </label>
       </a>
-    </form>
+   
   </li>
   {% else %}
   <div>Keine Rezepte vorhanden... 🍳</div>
