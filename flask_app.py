@@ -168,7 +168,7 @@ def meine_rezepte():
 @app.route("/einkaufsliste", methods=["GET", "POST"])
 @login_required
 def einkaufsliste():
-    """Einkaufsliste - Suche Rezepte nach Zutaten"""
+    """Einkaufsliste - Suche Rezepte nach vorhandenen Zutaten"""
     gefundene_rezepte = []
     suchbegriffe = []
     
@@ -179,48 +179,56 @@ def einkaufsliste():
             # Splitte die Zutaten (durch Komma getrennt)
             suchbegriffe = [z.strip().lower() for z in zutaten_input.split(",") if z.strip()]
             
-            # Suche Rezepte die mindestens eine der Zutaten enthalten
-            # Hole alle Rezepte des Benutzers mit ihren Zutaten
+            # Hole alle Rezepte des Benutzers
             rezepte = db_read(
-                """SELECT DISTINCT r.id, r.name, r.description 
-                   FROM rezepte r 
-                   JOIN zutaten z ON r.id = z.rezept_id 
-                   WHERE r.user_id=%s""", 
+                "SELECT id, name, description FROM rezepte WHERE user_id=%s", 
                 (current_user.id,)
             )
             
-            # Filtere Rezepte die mindestens eine gesuchte Zutat enthalten
+            # Für jedes Rezept: prüfe welche Zutaten vorhanden/fehlend sind
             for rezept in rezepte:
                 # Hole alle Zutaten für dieses Rezept
-                zutaten = db_read(
+                alle_zutaten = db_read(
                     "SELECT name, number, einheit FROM zutaten WHERE rezept_id=%s",
                     (rezept['id'],)
                 )
                 
-                # Prüfe ob mindestens eine gesuchte Zutat vorhanden ist
-                rezept_zutaten = [z['name'].lower() for z in zutaten]
-                for suchbegriff in suchbegriffe:
-                    if any(suchbegriff in zutat for zutat in rezept_zutaten):
-                        # Füge Zutaten-Info zum Rezept hinzu
-                        rezept['zutaten'] = zutaten
-                        gefundene_rezepte.append(rezept)
-                        break  # Rezept wurde schon hinzugefügt
-    
-    # Erstelle kombinierte Einkaufsliste aus allen gefundenen Rezepten
-    einkaufsliste = []
-    if gefundene_rezepte:
-        for rezept in gefundene_rezepte:
-            for zutat in rezept['zutaten']:
-                einkaufsliste.append({
-                    'name': zutat['name'],
-                    'number': zutat['number'],
-                    'einheit': zutat['einheit'],
-                    'rezept': rezept['name']
-                })
+                if not alle_zutaten:
+                    continue
+                
+                vorhandene_zutaten = []
+                fehlende_zutaten = []
+                
+                # Kategorisiere Zutaten
+                for zutat in alle_zutaten:
+                    zutat_name_lower = zutat['name'].lower()
+                    # Prüfe ob Zutat vorhanden ist
+                    ist_vorhanden = any(suchbegriff in zutat_name_lower for suchbegriff in suchbegriffe)
+                    
+                    if ist_vorhanden:
+                        vorhandene_zutaten.append(zutat)
+                    else:
+                        fehlende_zutaten.append(zutat)
+                
+                # Berechne Match-Prozentsatz
+                total = len(alle_zutaten)
+                vorhanden_count = len(vorhandene_zutaten)
+                prozent = int((vorhanden_count / total) * 100) if total > 0 else 0
+                
+                # Füge Rezept hinzu wenn mindestens eine Zutat vorhanden
+                if vorhanden_count > 0:
+                    rezept['vorhandene_zutaten'] = vorhandene_zutaten
+                    rezept['fehlende_zutaten'] = fehlende_zutaten
+                    rezept['vorhanden_count'] = vorhanden_count
+                    rezept['total_count'] = total
+                    rezept['prozent'] = prozent
+                    gefundene_rezepte.append(rezept)
+            
+            # Sortiere nach Anzahl vorhandener Zutaten (absteigend)
+            gefundene_rezepte.sort(key=lambda x: x['prozent'], reverse=True)
     
     return render_template("einkaufsliste.html", 
-                          rezepte=gefundene_rezepte, 
-                          einkaufsliste=einkaufsliste,
+                          rezepte=gefundene_rezepte,
                           suchbegriffe=", ".join(suchbegriffe))
 
 @app.post("/complete")
