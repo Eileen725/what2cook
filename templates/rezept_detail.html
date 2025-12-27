@@ -15,19 +15,15 @@
         <div class="panel-body">
             <ul style="list-style: none; padding: 0;">
                 {% for zutat in zutaten %}
-                    <li style="margin-bottom: 15px; padding: 10px; background: #f9f9f9; border-radius: 5px;">
-                        <div class="row">
-                            <div class="col-md-8">
-                                {% if zutat.number %}
-                                    {{ zutat.number }}
-                                {% endif %}
-                                {% if zutat.einheit %}
-                                    {{ zutat.einheit }}
-                                {% endif %}
-                                <strong>{{ zutat.name }}</strong>
-                            </div>
-                           
-                        </div>
+                    <li style="margin-bottom: 10px; padding: 12px; background: #f9f9f9; border-radius: 5px; border-left: 3px solid #5cb85c;">
+                        <strong>{{ zutat.name }}</strong>
+                        {% if zutat.number or zutat.einheit %}
+                            <span style="color: #666;">
+                                - 
+                                {% if zutat.number %}{{ zutat.number }}{% endif %}
+                                {% if zutat.einheit %}{{ zutat.einheit }}{% endif %}
+                            </span>
+                        {% endif %}
                     </li>
                 {% else %}
                     <li>Keine Zutaten vorhanden.</li>
