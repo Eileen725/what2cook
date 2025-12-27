@@ -114,13 +114,12 @@ def logout():
 def index():
     # GET, zeigt Rezepte
     if request.method == "GET":
-        todos = db_read("SELECT id, content, due FROM todos WHERE user_id=%s ORDER BY due", (current_user.id,))
-        return render_template("main_page.html", todos=todos)
+        rezepte = db_read("SELECT id, content, (current_user.id,))
+        return render_template("main_page.html", rezepte=rezepte)
 
     # POST, neue Rezepte
     content = request.form["contents"]
-    due = request.form["due_at"]
-    db_write("INSERT INTO todos (user_id, content, due) VALUES (%s, %s, %s)", (current_user.id, content, due, ))
+    db_write("INSERT INTO rezepte(user_id, content, description) VALUES (%s, %s, %s)", (current_user.id, content, description, ))
     return redirect(url_for("index"))
 
 @app.post("/complete")
