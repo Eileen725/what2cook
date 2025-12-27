@@ -21,7 +21,7 @@ CREATE TABLE zutaten (
     FOREIGN KEY (rezept_id) REFERENCES rezepte(id)
 );
 
---Beschreibungen von jedem Rezept (kann man noch ändern)
+-- Beschreibungen von jedem Rezept (kann man noch ändern)
 INSERT INTO rezepte (user_id, name, description) VALUES (1, 'Pizza', 'Klassischer Pizzateig mit Tomatensauce und Käse');
 INSERT INTO rezepte (user_id, name, description) VALUES (1, 'Spaghetti', 'Spaghetti mit Butter - Kindheistklassiker');
 INSERT INTO rezepte (user_id, name, description) VALUES (1, 'Tomatensauce', 'Frische Tomatensauce von scratch');
