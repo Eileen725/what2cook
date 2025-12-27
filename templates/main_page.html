@@ -2,44 +2,44 @@
 
 {% block content %}
     <ul class="todo-list">
-          {% for todo in todos %}
+          {% for rezept in rezepte %}
             <li class="todo-item">
               <form action="/complete" method="POST" class="todo-complete-form">
 
-                <input type="hidden" name="id" value="{{ todo.id }}">
+                <input type="hidden" name="id" value="{{ rezept.id }}">
 
                 <!-- Checkbox triggert Submit -->
                 <input
                   type="checkbox"
                   class="todo-checkbox"
-                  id="todo-{{ todo.id }}"
+                  id="rezept-{{ rezept.id }}"
                   name="complete"
                   value="1"
                   onchange="this.form.submit()">
 
-                <label for="todo-{{ todo.id }}" class="todo-content">
-                  {{ todo.content }}
-                  <span class="todo-date">📅 {{ todo.due.strftime('%d.%m.%Y %H:%M') }}</span>
+                <label for="rezept-{{ rezept.id }}" class="todo-content">
+                  {{ rezept.name }}
+                  <span class="todo-date">{{ rezept.description }}</span>
                 </label>
               </form>
             </li>
           {% else %}
-            <div>Nichts zu tun 😎</div>
+            <div>Keine Rezepte vorhanden 🍳</div>
           {% endfor %}
         </ul>
 
       <div class="todo-form">
         <form action="." method="POST">
           <div class="form-group">
-            <label for="contents">TODO</label>
-            <input type="text" id="contents" name="contents" class="form-control"
-              placeholder="Neues TODO eingeben…" required />
+            <label for="name">Rezeptname</label>
+            <input type="text" id="name" name="name" class="form-control"
+              placeholder="Neues Rezept eingeben…" required />
           </div>
 
           <div class="form-group">
-            <label for="due_at">Fällig am</label>
-            <input id="due_at" name="due_at" type="datetime-local" class="form-control" required>
-            <p class="help-block">Wähle Datum & Uhrzeit (z. B. 07.11.2025 14:30).</p>
+            <label for="description">Beschreibung</label>
+            <input id="description" name="description" type="text" class="form-control" required>
+            <p class="help-block">Kurze Beschreibung des Rezepts.</p>
           </div>
 
           <button type="submit" class="btn btn-primary">Hinzufügen</button>

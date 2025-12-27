@@ -114,19 +114,20 @@ def logout():
 def index():
     # GET, zeigt Rezepte
     if request.method == "GET":
-        rezepte = db_read("SELECT id, content, (current_user.id,))
+        rezepte = db_read("SELECT id, name, description FROM rezepte WHERE user_id=%s", (current_user.id,))
         return render_template("main_page.html", rezepte=rezepte)
 
     # POST, neue Rezepte
-    content = request.form["contents"]
-    db_write("INSERT INTO rezepte(user_id, content, description) VALUES (%s, %s, %s)", (current_user.id, content, description, ))
+    name = request.form["name"]
+    description = request.form["description"]
+    db_write("INSERT INTO rezepte(user_id, name, description) VALUES (%s, %s, %s)", (current_user.id, name, description, ))
     return redirect(url_for("index"))
 
 @app.post("/complete")
 @login_required
 def complete():
-    todo_id = request.form.get("id")
-    db_write("DELETE FROM todos WHERE user_id=%s AND id=%s", (current_user.id, todo_id,))
+    rezept_id = request.form.get("id")
+    db_write("DELETE FROM rezepte WHERE user_id=%s AND id=%s", (current_user.id, rezept_id,))
     return redirect(url_for("index"))
 
 if __name__ == "__main__":
