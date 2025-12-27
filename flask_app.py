@@ -193,7 +193,7 @@ def einkaufsliste():
             for rezept in rezepte:
                 # Hole alle Zutaten für dieses Rezept
                 zutaten = db_read(
-                    "SELECT name FROM zutaten WHERE rezept_id=%s",
+                    "SELECT name, number, einheit FROM zutaten WHERE rezept_id=%s",
                     (rezept['id'],)
                 )
                 
@@ -206,8 +206,21 @@ def einkaufsliste():
                         gefundene_rezepte.append(rezept)
                         break  # Rezept wurde schon hinzugefügt
     
+    # Erstelle kombinierte Einkaufsliste aus allen gefundenen Rezepten
+    einkaufsliste = []
+    if gefundene_rezepte:
+        for rezept in gefundene_rezepte:
+            for zutat in rezept['zutaten']:
+                einkaufsliste.append({
+                    'name': zutat['name'],
+                    'number': zutat['number'],
+                    'einheit': zutat['einheit'],
+                    'rezept': rezept['name']
+                })
+    
     return render_template("einkaufsliste.html", 
                           rezepte=gefundene_rezepte, 
+                          einkaufsliste=einkaufsliste,
                           suchbegriffe=", ".join(suchbegriffe))
 
 @app.post("/complete")

@@ -29,37 +29,53 @@
     <hr style="margin: 40px 0;">
     
     {% if rezepte %}
-      <h3>🎉 {{ rezepte|length }} Rezept(e) gefunden mit: {{ suchbegriffe }}</h3>
-      
-      <div style="margin-top: 20px;">
-        {% for rezept in rezepte %}
-          <div style="background: #f9f9f9; padding: 20px; margin-bottom: 15px; border-radius: 8px; border-left: 4px solid #5cb85c;">
-            <h4 style="margin-top: 0;">
-              <a href="{{ url_for('rezept_detail', rezept_id=rezept.id) }}" style="color: #333; text-decoration: none;">
-                {{ rezept.name }}
+      <div style="display: flex; gap: 20px; margin-top: 20px;">
+        <!-- Linke Seite: Einkaufsliste -->
+        <div style="flex: 1; background: #e8f5e9; padding: 20px; border-radius: 8px; border: 2px solid #4caf50;">
+          <h3 style="margin-top: 0; color: #2e7d32;">🛒 Deine Einkaufsliste</h3>
+          <p style="color: #666; margin-bottom: 15px;">Alle benötigten Zutaten für {{ rezepte|length }} Rezept(e):</p>
+          
+          <ul style="list-style: none; padding: 0;">
+            {% for item in einkaufsliste %}
+              <li style="padding: 8px 0; border-bottom: 1px solid #c8e6c9;">
+                <input type="checkbox" style="margin-right: 10px;">
+                <strong>{{ item.name }}</strong>
+                {% if item.number %}
+                  <span style="color: #666;">- {{ item.number }}</span>
+                {% endif %}
+                {% if item.einheit %}
+                  <span style="color: #666;">{{ item.einheit }}</span>
+                {% endif %}
+                <br>
+                <small style="color: #999; margin-left: 28px;">für {{ item.rezept }}</small>
+              </li>
+            {% endfor %}
+          </ul>
+          
+          <button onclick="window.print()" class="btn btn-success btn-sm" style="margin-top: 15px;">
+            🖨️ Liste drucken
+          </button>
+        </div>
+        
+        <!-- Rechte Seite: Gefundene Rezepte -->
+        <div style="flex: 2;">
+          <h3>🎉 {{ rezepte|length }} Rezept(e) gefunden</h3>
+          
+          {% for rezept in rezepte %}
+            <div style="background: #f9f9f9; padding: 20px; margin-bottom: 15px; border-radius: 8px; border-left: 4px solid #5cb85c;">
+              <h4 style="margin-top: 0;">
+                <a href="{{ url_for('rezept_detail', rezept_id=rezept.id) }}" style="color: #333; text-decoration: none;">
+                  {{ rezept.name }}
+                </a>
+              </h4>
+              <p style="color: #666; margin-bottom: 10px;">{{ rezept.description }}</p>
+              
+              <a href="{{ url_for('rezept_detail', rezept_id=rezept.id) }}" class="btn btn-sm btn-primary">
+                Rezept öffnen →
               </a>
-            </h4>
-            <p style="color: #666; margin-bottom: 10px;">{{ rezept.description }}</p>
-            
-            <strong style="color: #5cb85c;">Zutaten:</strong>
-            <ul style="margin-top: 5px; padding-left: 20px;">
-              {% for zutat in rezept.zutaten[:5] %}
-                <li style="color: #666;">
-                  {{ zutat.name }}
-                  {% if zutat.number %} - {{ zutat.number }}{% endif %}
-                  {% if zutat.einheit %}{{ zutat.einheit }}{% endif %}
-                </li>
-              {% endfor %}
-              {% if rezept.zutaten|length > 5 %}
-                <li style="color: #999;">... und {{ rezept.zutaten|length - 5 }} weitere</li>
-              {% endif %}
-            </ul>
-            
-            <a href="{{ url_for('rezept_detail', rezept_id=rezept.id) }}" class="btn btn-sm btn-primary" style="margin-top: 10px;">
-              Rezept öffnen →
-            </a>
-          </div>
-        {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
       </div>
     {% else %}
       <div style="text-align: center; padding: 40px; background-color: #fff3cd; border-radius: 8px; border: 1px solid #ffc107;">
