@@ -13,20 +13,23 @@
     <h3>Was kannst du hier machen?</h3>
     <ul style="list-style: none; padding-left: 0;">
       <li style="margin: 15px 0;">
-        🍽️ <strong>Rezepte verwalten:</strong> Speichere all deine Lieblingsrezepte an einem Ort
+        🍽️ <strong>Rezepte verwalten:</strong> Speichere all deine Lieblingsrezepte mit Zutaten an einem Ort
       </li>
       <li style="margin: 15px 0;">
-        📝 <strong>Details anzeigen:</strong> Klicke auf ein Rezept, um Zutaten und Zubereitung zu sehen
+        🔍 <strong>Rezepte suchen:</strong> Finde schnell das passende Rezept mit der Suchfunktion
       </li>
       <li style="margin: 15px 0;">
-        🛒 <strong>Einkaufsliste:</strong> Plane deine Einkäufe direkt aus deinen Rezepten (kommt bald!)
+        🛒 <strong>Smarte Einkaufsliste:</strong> Gib ein, was du zu Hause hast und finde passende Rezepte. Sieh sofort, welche Zutaten du noch kaufen musst!
       </li>
     </ul>
   </div>
   
   <p style="margin-top: 40px;">
-    <a class="btn btn-primary btn-lg" href="{{ url_for('meine_rezepte') }}" role="button">
+    <a class="btn btn-primary btn-lg" href="{{ url_for('meine_rezepte') }}" role="button" style="margin-right: 10px;">
       Zu meinen Rezepten →
+    </a>
+    <a class="btn btn-success btn-lg" href="{{ url_for('einkaufsliste') }}" role="button">
+      Zur Einkaufsliste 🛒
     </a>
   </p>
 </div>
