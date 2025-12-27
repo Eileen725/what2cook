@@ -3,16 +3,75 @@
 {% block content %}
 <div style="background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
   <h1>🛒 Einkaufsliste</h1>
+  <p style="color: #666; margin-top: 10px;">
+    Gib Zutaten ein, die du zu Hause hast, und finde passende Rezepte!
+  </p>
   
-  <div style="margin-top: 30px; padding: 40px; background-color: #f9f9f9; border-radius: 8px; text-align: center;">
-    <h3 style="color: #999;">Diese Funktion kommt bald!</h3>
-    <p style="color: #666; margin-top: 15px;">
-      Hier kannst du bald deine Einkaufsliste aus deinen Rezepten zusammenstellen.
-    </p>
+  <!-- Suchformular -->
+  <form method="POST" style="margin-top: 30px;">
+    <div class="form-group">
+      <label for="zutaten">🥗 Welche Zutaten hast du?</label>
+      <input type="text" 
+             id="zutaten" 
+             name="zutaten" 
+             class="form-control" 
+             placeholder="z.B. Tomaten, Pasta, Käse (getrennt durch Komma)"
+             value="{{ suchbegriffe }}"
+             style="font-size: 16px; padding: 12px;"
+             autofocus>
+      <p class="help-block">Trenne mehrere Zutaten mit Komma. Drücke Enter zum Suchen.</p>
+    </div>
+    <button type="submit" class="btn btn-primary btn-lg">🔍 Rezepte finden</button>
+  </form>
+
+  <!-- Ergebnisse -->
+  {% if suchbegriffe %}
+    <hr style="margin: 40px 0;">
     
-    <a href="{{ url_for('meine_rezepte') }}" class="btn btn-primary" style="margin-top: 20px;">
-      Zurück zu meinen Rezepten
-    </a>
-  </div>
+    {% if rezepte %}
+      <h3>🎉 {{ rezepte|length }} Rezept(e) gefunden mit: {{ suchbegriffe }}</h3>
+      
+      <div style="margin-top: 20px;">
+        {% for rezept in rezepte %}
+          <div style="background: #f9f9f9; padding: 20px; margin-bottom: 15px; border-radius: 8px; border-left: 4px solid #5cb85c;">
+            <h4 style="margin-top: 0;">
+              <a href="{{ url_for('rezept_detail', rezept_id=rezept.id) }}" style="color: #333; text-decoration: none;">
+                {{ rezept.name }}
+              </a>
+            </h4>
+            <p style="color: #666; margin-bottom: 10px;">{{ rezept.description }}</p>
+            
+            <strong style="color: #5cb85c;">Zutaten:</strong>
+            <ul style="margin-top: 5px; padding-left: 20px;">
+              {% for zutat in rezept.zutaten[:5] %}
+                <li style="color: #666;">
+                  {{ zutat.name }}
+                  {% if zutat.number %} - {{ zutat.number }}{% endif %}
+                  {% if zutat.einheit %}{{ zutat.einheit }}{% endif %}
+                </li>
+              {% endfor %}
+              {% if rezept.zutaten|length > 5 %}
+                <li style="color: #999;">... und {{ rezept.zutaten|length - 5 }} weitere</li>
+              {% endif %}
+            </ul>
+            
+            <a href="{{ url_for('rezept_detail', rezept_id=rezept.id) }}" class="btn btn-sm btn-primary" style="margin-top: 10px;">
+              Rezept öffnen →
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div style="text-align: center; padding: 40px; background-color: #fff3cd; border-radius: 8px; border: 1px solid #ffc107;">
+        <h3 style="color: #856404;">🤔 Keine Rezepte gefunden</h3>
+        <p style="color: #856404; margin-top: 10px;">
+          Mit den Zutaten "{{ suchbegriffe }}" wurde leider kein Rezept gefunden.
+        </p>
+        <p style="color: #856404;">
+          Versuche es mit anderen Zutaten oder füge neue Rezepte hinzu!
+        </p>
+      </div>
+    {% endif %}
+  {% endif %}
 </div>
 {% endblock %}

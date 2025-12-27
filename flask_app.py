@@ -165,11 +165,50 @@ def meine_rezepte():
     
     return redirect(url_for("meine_rezepte"))  # Lädt Seite neu um neues Rezept anzuzeigen
 
-@app.route("/einkaufsliste")
+@app.route("/einkaufsliste", methods=["GET", "POST"])
 @login_required
 def einkaufsliste():
-    """Einkaufsliste - Kommt später"""
-    return render_template("einkaufsliste.html")
+    """Einkaufsliste - Suche Rezepte nach Zutaten"""
+    gefundene_rezepte = []
+    suchbegriffe = []
+    
+    if request.method == "POST":
+        # Hole Zutaten aus dem Formular
+        zutaten_input = request.form.get("zutaten", "").strip()
+        if zutaten_input:
+            # Splitte die Zutaten (durch Komma getrennt)
+            suchbegriffe = [z.strip().lower() for z in zutaten_input.split(",") if z.strip()]
+            
+            # Suche Rezepte die mindestens eine der Zutaten enthalten
+            # Hole alle Rezepte des Benutzers mit ihren Zutaten
+            rezepte = db_read(
+                """SELECT DISTINCT r.id, r.name, r.description 
+                   FROM rezepte r 
+                   JOIN zutaten z ON r.id = z.rezept_id 
+                   WHERE r.user_id=%s""", 
+                (current_user.id,)
+            )
+            
+            # Filtere Rezepte die mindestens eine gesuchte Zutat enthalten
+            for rezept in rezepte:
+                # Hole alle Zutaten für dieses Rezept
+                zutaten = db_read(
+                    "SELECT name FROM zutaten WHERE rezept_id=%s",
+                    (rezept['id'],)
+                )
+                
+                # Prüfe ob mindestens eine gesuchte Zutat vorhanden ist
+                rezept_zutaten = [z['name'].lower() for z in zutaten]
+                for suchbegriff in suchbegriffe:
+                    if any(suchbegriff in zutat for zutat in rezept_zutaten):
+                        # Füge Zutaten-Info zum Rezept hinzu
+                        rezept['zutaten'] = zutaten
+                        gefundene_rezepte.append(rezept)
+                        break  # Rezept wurde schon hinzugefügt
+    
+    return render_template("einkaufsliste.html", 
+                          rezepte=gefundene_rezepte, 
+                          suchbegriffe=", ".join(suchbegriffe))
 
 @app.post("/complete")
 @login_required  # Nur eingeloggte Benutzer
