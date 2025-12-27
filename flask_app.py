@@ -112,7 +112,7 @@ def logout():
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
-    # GET, zeigt Rezepte
+    # GET, zeigt die Rezepte
     if request.method == "GET":
         rezepte = db_read("SELECT id, name, description FROM rezepte WHERE user_id=%s", (current_user.id,))
         return render_template("main_page.html", rezepte=rezepte)
