@@ -1,9 +1,13 @@
 {% extends "base.html" %}
 
-<div>Rezept Detail</div>
-
+{% block content %}
+<div class="rezept-detail">
     <h1>{{ rezept.name }}</h1>
     
     {% if rezept.description %}
-    <p>{{ rezept.description }}</p>
+    <p class="description">{{ rezept.description }}</p>
     {% endif %}
+    
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Zurück zur Übersicht</a>
+</div>
+{% endblock %}

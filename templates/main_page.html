@@ -4,20 +4,13 @@
 <ul class="todo-list">
   {% for rezept in rezepte %}
   <li class="todo-item">
-   
-      <input type="hidden" name="id" value="{{ rezept.id }}">
+ 
 
-      <!-- Checkbox triggert Submit -->
-      <input type="checkbox" class="todo-checkbox" id="rezept-{{ rezept.id }}" name="complete" value="1"
-        onchange="this.form.submit()">
-      <a href="{{ url_for('rezept_detail', rezept_id=rezept.id) }}">
 
-        <label for="rezept-{{ rezept.id }}" class="todo-content">
-          {{ rezept.name }}
-          <span class="todo-date">{{ rezept.description }}</span>
-        </label>
-      </a>
-   
+    <a href="{{ url_for('rezept_detail', rezept_id=rezept.id) }}" class="todo-content">
+      {{ rezept.name }}
+      <span class="todo-date">{{ rezept.description }}</span>
+    </a>
   </li>
   {% else %}
   <div>Keine Rezepte vorhanden... 🍳</div>
