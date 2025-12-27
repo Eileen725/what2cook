@@ -1,23 +1,44 @@
 {% extends "base.html" %}
 
 {% block content %}
-<ul class="todo-list">
+<h2 style="margin-bottom: 20px;">🍳 Meine Rezepte</h2>
+
+<!-- Suchfeld -->
+<div style="margin-bottom: 20px;">
+  <input type="text" 
+         id="search-input" 
+         class="form-control" 
+         placeholder="🔍 Rezepte durchsuchen..." 
+         style="font-size: 16px; padding: 12px;">
+</div>
+
+<!-- Rezeptliste -->
+<ul class="rezept-list" id="rezept-list">
   {% for rezept in rezepte %}
-  <li class="todo-item">
- 
+  <li class="rezept-item" data-name="{{ rezept.name|lower }}" data-description="{{ rezept.description|lower }}">
+    <form action="/complete" method="POST" class="rezept-complete-form">
+      <input type="hidden" name="id" value="{{ rezept.id }}">
+      <input type="checkbox" class="rezept-checkbox" id="rezept-{{ rezept.id }}" name="complete" value="1"
+        onchange="this.form.submit()">
+    </form>
 
-
-    <a href="{{ url_for('rezept_detail', rezept_id=rezept.id) }}" class="todo-content">
+    <a href="{{ url_for('rezept_detail', rezept_id=rezept.id) }}" class="rezept-content">
       {{ rezept.name }}
-      <span class="todo-date">{{ rezept.description }}</span>
+      <span class="rezept-description">{{ rezept.description }}</span>
     </a>
   </li>
   {% else %}
-  <div>Keine Rezepte vorhanden... 🍳</div>
+  <div id="no-recipes">Keine Rezepte vorhanden... 🍳</div>
   {% endfor %}
 </ul>
 
-<div class="todo-form">
+<div id="no-results" style="display: none; text-align: center; padding: 30px; color: #999;">
+  Keine Rezepte gefunden 🔍
+</div>
+
+<!-- Neues Rezept hinzufügen -->
+<div class="rezept-form" style="margin-top: 40px;">
+  <h3>Neues Rezept hinzufügen</h3>
   <form action="." method="POST">
     <div class="form-group">
       <label for="name">Rezeptname</label>
@@ -33,4 +54,34 @@
     <button type="submit" class="btn btn-primary">Hinzufügen</button>
   </form>
 </div>
+
+<script>
+// Live-Suche für Rezepte
+document.getElementById('search-input').addEventListener('input', function(e) {
+  const searchTerm = e.target.value.toLowerCase().trim();
+  const rezeptItems = document.querySelectorAll('.rezept-item');
+  const noResults = document.getElementById('no-results');
+  let visibleCount = 0;
+
+  rezeptItems.forEach(function(item) {
+    const name = item.getAttribute('data-name');
+    const description = item.getAttribute('data-description');
+    
+    // Prüfe ob Suchbegriff in Name oder Beschreibung vorkommt
+    if (name.includes(searchTerm) || description.includes(searchTerm)) {
+      item.style.display = 'block';
+      visibleCount++;
+    } else {
+      item.style.display = 'none';
+    }
+  });
+
+  // Zeige "Keine Ergebnisse" wenn nichts gefunden wurde
+  if (visibleCount === 0 && searchTerm !== '') {
+    noResults.style.display = 'block';
+  } else {
+    noResults.style.display = 'none';
+  }
+});
+</script>
 {% endblock %}
