@@ -170,3 +170,82 @@ INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (16, 'Milch', 50, 
 INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (16, 'Butter', 20, 'g');
 INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (16, 'Salz', NULL, NULL);
 INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (16, 'Pfeffer', NULL, NULL);
+
+
+
+-- Asiatische Rezepte für User 1 (03.01.2026)
+INSERT INTO rezepte (user_id, name, description) VALUES (1, 'Pad Thai', 'Klassische thailändische gebratene Reisnudeln mit Tamarinde und Erdnüssen');
+INSERT INTO rezepte (user_id, name, description) VALUES (1, 'Gebratener Reis mit Gemüse', 'Asiatischer Bratreis mit knackigem Gemüse und Sojasauce');
+INSERT INTO rezepte (user_id, name, description) VALUES (1, 'Miso-Suppe', 'Traditionelle japanische Suppe mit Tofu und Wakame');
+INSERT INTO rezepte (user_id, name, description) VALUES (1, 'Vietnamesische Sommerrollen', 'Frische Reispapierrollen mit Gemüse und Garnelen');
+INSERT INTO rezepte (user_id, name, description) VALUES (1, 'Koreanisches Bibimbap', 'Reisschale mit buntem Gemüse, Ei und Gochujang-Sauce');
+INSERT INTO rezepte (user_id, name, description) VALUES (1, 'Thai-Curry mit Tofu', 'Rotes Thai-Curry mit Kokosmilch und frischem Gemüse');
+
+-- Zutaten für Pad Thai (rezept_id 17)
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (17, 'Reisnudeln', 250, 'g');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (17, 'Garnelen', 200, 'g');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (17, 'Eier', 2, 'Stück');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (17, 'Sojasprossen', 100, 'g');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (17, 'Frühlingszwiebeln', 3, 'Stück');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (17, 'Erdnüsse', 50, 'g');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (17, 'Tamarindenpaste', 2, 'EL');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (17, 'Fischsauce', 2, 'EL');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (17, 'Knoblauch', 2, 'Zehen');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (17, 'Limette', 1, 'Stück');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (17, 'Palmzucker', 1, 'EL');
+
+-- Zutaten für Gebratener Reis mit Gemüse (rezept_id 18)
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (18, 'Reis', 300, 'g');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (18, 'Eier', 2, 'Stück');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (18, 'Karotten', 2, 'Stück');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (18, 'Erbsen', 100, 'g');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (18, 'Mais', 100, 'g');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (18, 'Frühlingszwiebeln', 3, 'Stück');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (18, 'Knoblauch', 2, 'Zehen');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (18, 'Sojasauce', 3, 'EL');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (18, 'Sesamöl', 1, 'TL');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (18, 'Ingwer', 1, 'Stück');
+
+-- Zutaten für Miso-Suppe (rezept_id 19)
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (19, 'Misopaste', 3, 'EL');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (19, 'Wasser', 1, 'l');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (19, 'Tofu', 200, 'g');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (19, 'Wakame-Algen', 10, 'g');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (19, 'Frühlingszwiebeln', 2, 'Stück');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (19, 'Dashi-Pulver', 1, 'TL');
+
+-- Zutaten für Vietnamesische Sommerrollen (rezept_id 20)
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (20, 'Reispapier', 12, 'Blätter');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (20, 'Garnelen', 250, 'g');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (20, 'Reisnudeln', 100, 'g');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (20, 'Salat', 1, 'Kopf');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (20, 'Gurke', 1, 'Stück');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (20, 'Karotten', 2, 'Stück');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (20, 'Minze', 1, 'Bund');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (20, 'Koriander', 1, 'Bund');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (20, 'Erdnusssauce', 100, 'ml');
+
+-- Zutaten für Koreanisches Bibimbap (rezept_id 21)
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (21, 'Reis', 400, 'g');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (21, 'Rindfleisch', 200, 'g');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (21, 'Spinat', 200, 'g');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (21, 'Karotten', 2, 'Stück');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (21, 'Zucchini', 1, 'Stück');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (21, 'Sojasprossen', 100, 'g');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (21, 'Eier', 4, 'Stück');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (21, 'Gochujang', 3, 'EL');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (21, 'Sesamöl', 2, 'EL');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (21, 'Knoblauch', 3, 'Zehen');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (21, 'Sojasauce', 2, 'EL');
+
+-- Zutaten für Thai-Curry mit Tofu (rezept_id 22)
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (22, 'Tofu', 400, 'g');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (22, 'Kokosmilch', 400, 'ml');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (22, 'Rote Currypaste', 3, 'EL');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (22, 'Paprika', 2, 'Stück');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (22, 'Zucchini', 1, 'Stück');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (22, 'Bambussprossen', 100, 'g');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (22, 'Thai-Basilikum', 1, 'Bund');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (22, 'Fischsauce', 2, 'EL');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (22, 'Limette', 1, 'Stück');
+INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (22, 'Reis', 300, 'g');
