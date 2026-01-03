@@ -237,11 +237,23 @@ def einkaufsliste():
 @app.post("/complete")
 @login_required  # Nur eingeloggte Benutzer
 def complete():
-    """Löscht ein Rezept (wenn Checkbox angeklickt wird)"""
+    """Löscht ein Rezept (wenn Checkbox angeklickt wird) - DEPRECATED, use delete_rezept instead"""
     rezept_id = request.form.get("id")  # Holt die Rezept-ID aus dem Formular
     # Löscht das Rezept aus der Datenbank (nur wenn es dem Benutzer gehört)
     db_write("DELETE FROM rezepte WHERE user_id=%s AND id=%s", (current_user.id, rezept_id,))
     return redirect(url_for("meine_rezepte"))  # Zurück zur Rezeptliste
+
+@app.post("/rezept/<int:rezept_id>/delete")
+@login_required
+def delete_rezept(rezept_id):
+    """Löscht ein eigenes Rezept (nicht allgemeine Rezepte)"""
+    # Löscht das Rezept nur wenn es dem aktuellen Benutzer gehört
+    # Zuerst Zutaten löschen (wegen Foreign Key)
+    db_write("DELETE FROM zutaten WHERE rezept_id=%s AND rezept_id IN (SELECT id FROM rezepte WHERE user_id=%s)", 
+             (rezept_id, current_user.id))
+    # Dann das Rezept selbst
+    db_write("DELETE FROM rezepte WHERE id=%s AND user_id=%s", (rezept_id, current_user.id))
+    return redirect(url_for("meine_rezepte"))
 
 
 
