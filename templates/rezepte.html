@@ -22,6 +22,9 @@
   {% for rezept in rezepte %}
   <li class="rezept-item" data-name="{{ rezept.name|lower }}" data-description="{{ rezept.description|lower }}">
     <a href="{{ url_for('rezept_detail', rezept_id=rezept.id) }}" class="rezept-content">
+      {% if rezept.user_id is none %}
+        <span style="background: #2196F3; color: white; padding: 3px 8px; border-radius: 4px; font-size: 11px; margin-right: 8px;">🌍 Allgemein</span>
+      {% endif %}
       {{ rezept.name }}
       <span class="rezept-description">{{ rezept.description }}</span>
     </a>

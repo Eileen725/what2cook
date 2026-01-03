@@ -6,7 +6,7 @@ CREATE TABLE users (
 
 CREATE TABLE rezepte (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    user_id INT NULL,  -- NULL = Allgemeines Rezept für alle
     name VARCHAR(250) NOT NULL,
     description VARCHAR(250) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)

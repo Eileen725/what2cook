@@ -136,9 +136,12 @@ def meine_rezepte():
     
     # GET: Zeigt die Rezept-Liste an
     if request.method == "GET":
-        # Lädt alle Rezepte des aktuellen Benutzers aus der Datenbank
-        rezepte = db_read("SELECT id, name, description FROM rezepte WHERE user_id=%s", (current_user.id,))
-        return render_template("rezepte.html", rezepte=rezepte)
+        # Lädt alle Rezepte des aktuellen Benutzers UND allgemeine Rezepte aus der Datenbank
+        rezepte = db_read(
+            "SELECT id, name, description, user_id FROM rezepte WHERE user_id=%s OR user_id IS NULL ORDER BY user_id DESC, name", 
+            (current_user.id,)
+        )
+        return render_template("rezepte.html", rezepte=rezepte, current_user_id=current_user.id)
 
     # POST: Neues Rezept hinzufügen
     name = request.form["name"]  # Holt Rezeptname aus Formular
@@ -179,9 +182,9 @@ def einkaufsliste():
             # Splitte die Zutaten (durch Komma getrennt)
             suchbegriffe = [z.strip().lower() for z in zutaten_input.split(",") if z.strip()]
             
-            # Hole alle Rezepte des Benutzers
+            # Hole alle Rezepte des Benutzers UND allgemeine Rezepte
             rezepte = db_read(
-                "SELECT id, name, description FROM rezepte WHERE user_id=%s", 
+                "SELECT id, name, description, user_id FROM rezepte WHERE user_id=%s OR user_id IS NULL", 
                 (current_user.id,)
             )
             
@@ -246,8 +249,12 @@ def complete():
 @login_required  # Nur eingeloggte Benutzer
 def rezept_detail(rezept_id):
     """Detail-Seite für ein einzelnes Rezept"""
-    # Lädt das Rezept aus der Datenbank (nur wenn es dem Benutzer gehört)
-    rezept = db_read("SELECT id, name, description FROM rezepte WHERE user_id=%s AND id=%s", (current_user.id, rezept_id), single=True)
+    # Lädt das Rezept aus der Datenbank (eigene oder allgemeine Rezepte)
+    rezept = db_read(
+        "SELECT id, name, description, user_id FROM rezepte WHERE (user_id=%s OR user_id IS NULL) AND id=%s", 
+        (current_user.id, rezept_id), 
+        single=True
+    )
     
     # Fehler wenn Rezept nicht existiert oder nicht dem Benutzer gehört
     if not rezept:
@@ -257,7 +264,7 @@ def rezept_detail(rezept_id):
     zutaten = db_read("SELECT id, name, number, einheit FROM zutaten WHERE rezept_id=%s", (rezept_id,))
     
     # Zeigt Template mit Rezept und Zutaten an
-    return render_template("rezept_detail.html", rezept=rezept, zutaten=zutaten)
+    return render_template("rezept_detail.html", rezept=rezept, zutaten=zutaten, current_user_id=current_user.id)
 
 
 if __name__ == "__main__":
