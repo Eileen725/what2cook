@@ -4,40 +4,50 @@
 <div class="jumbotron" style="background-color: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
   <h1>Willkommen bei what2cook! 🍳</h1>
   <p class="lead" style="font-size: 18px; margin-top: 20px;">
-    Deine persönliche Rezeptsammlung - einfach, übersichtlich und immer griffbereit.
+    Deine smarte Rezeptsammlung - finde das perfekte Rezept mit den Zutaten, die du zu Hause hast!
   </p>
   
   <hr style="margin: 30px 0;">
   
+  <!-- Hauptfunktion: Rezeptsuche -->
+  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 12px; margin-bottom: 30px; color: white; text-align: center;">
+    <h2 style="margin-top: 0; color: white;">🔍 Rezeptsuche mit Zutaten</h2>
+    <p style="font-size: 18px; margin: 20px 0;">
+      Gib ein, welche Zutaten du zu Hause hast, und entdecke passende Rezepte.
+      <br>Sieh sofort, was du noch kaufen musst!
+    </p>
+    <a class="btn btn-lg" href="{{ url_for('einkaufsliste') }}" role="button" 
+       style="background-color: white; color: #667eea; font-weight: bold; font-size: 20px; padding: 15px 40px; border: none;">
+      Jetzt Rezepte finden →
+    </a>
+  </div>
+  
   <div style="font-size: 16px; line-height: 1.8;">
-    <h3>Was kannst du hier machen?</h3>
+    <h3>Weitere Funktionen:</h3>
     <ul style="list-style: none; padding-left: 0;">
       <li style="margin: 15px 0;">
-        🍽️ <strong>Rezepte verwalten:</strong> Speichere all deine Lieblingsrezepte mit Zutaten an einem Ort
+        🍳 <strong>Rezepte verwalten:</strong> Speichere all deine Lieblingsrezepte mit Zutaten
       </li>
       <li style="margin: 15px 0;">
-        🔍 <strong>Rezepte suchen:</strong> Finde schnell das passende Rezept mit der Suchfunktion
+        🔍 <strong>Schnelle Suche:</strong> Finde gespeicherte Rezepte mit der Suchfunktion
       </li>
       <li style="margin: 15px 0;">
-        🛒 <strong>Smarte Einkaufsliste:</strong> Gib ein, was du zu Hause hast und finde passende Rezepte. Sieh sofort, welche Zutaten du noch kaufen musst!
+        📝 <strong>Detaillierte Ansicht:</strong> Alle Zutaten und Mengen auf einen Blick
       </li>
     </ul>
   </div>
   
-  <p style="margin-top: 40px;">
-    <a class="btn btn-primary btn-lg" href="{{ url_for('meine_rezepte') }}" role="button" style="margin-right: 10px;">
-      Zu meinen Rezepten →
-    </a>
-    <a class="btn btn-success btn-lg" href="{{ url_for('einkaufsliste') }}" role="button">
-      Zur Einkaufsliste 🛒
+  <p style="margin-top: 40px; text-align: center;">
+    <a class="btn btn-default btn-lg" href="{{ url_for('meine_rezepte') }}" role="button">
+      Zu meinen Rezepten
     </a>
   </p>
 </div>
 
 <div style="margin-top: 30px; padding: 20px; background-color: #f0f8ff; border-radius: 8px; border-left: 4px solid #5bc0de;">
-  <h4>💡 Tipp</h4>
+  <h4>💡 So funktioniert's</h4>
   <p style="margin-bottom: 0;">
-    Nutze das Menü oben, um zwischen deinen Rezepten und der Einkaufsliste zu wechseln!
+    <strong>1.</strong> Klicke auf "Rezeptsuche mit Zutaten" → <strong>2.</strong> Gib deine vorhandenen Zutaten ein → <strong>3.</strong> Entdecke passende Rezepte sortiert nach Verfügbarkeit!
   </p>
 </div>
 {% endblock %}
