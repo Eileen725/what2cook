@@ -256,6 +256,56 @@ def delete_rezept(rezept_id):
     return redirect(url_for("meine_rezepte"))
 
 
+@app.route("/rezept/<int:rezept_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_rezept(rezept_id):
+    """Bearbeitet ein eigenes Rezept (nicht allgemeine Rezepte)"""
+    
+    # Lädt das Rezept aus der Datenbank (nur eigene Rezepte)
+    rezept = db_read(
+        "SELECT id, name, description, user_id FROM rezepte WHERE user_id=%s AND id=%s", 
+        (current_user.id, rezept_id), 
+        single=True
+    )
+    
+    # Fehler wenn Rezept nicht existiert oder nicht dem Benutzer gehört
+    if not rezept:
+        return "Rezept nicht gefunden oder du hast keine Berechtigung zum Bearbeiten", 403
+    
+    # GET: Zeigt das Bearbeitungs-Formular an
+    if request.method == "GET":
+        # Lädt alle Zutaten für dieses Rezept
+        zutaten = db_read("SELECT id, name, number, einheit FROM zutaten WHERE rezept_id=%s", (rezept_id,))
+        return render_template("rezept_edit.html", rezept=rezept, zutaten=zutaten)
+    
+    # POST: Speichert die Änderungen
+    name = request.form["name"]
+    description = request.form["description"]
+    
+    # Aktualisiert das Rezept
+    db_write("UPDATE rezepte SET name=%s, description=%s WHERE id=%s AND user_id=%s", 
+             (name, description, rezept_id, current_user.id))
+    
+    # Verarbeitet Zutaten
+    zutat_ids = request.form.getlist("zutat_id[]")
+    zutat_names = request.form.getlist("zutat_name[]")
+    zutat_numbers = request.form.getlist("zutat_number[]")
+    zutat_einheiten = request.form.getlist("zutat_einheit[]")
+    
+    # Löscht alle bestehenden Zutaten
+    db_write("DELETE FROM zutaten WHERE rezept_id=%s", (rezept_id,))
+    
+    # Fügt Zutaten wieder hinzu (nur die, die ausgefüllt sind)
+    for i in range(len(zutat_names)):
+        if zutat_names[i].strip():  # Nur speichern wenn Name nicht leer
+            number = float(zutat_numbers[i]) if zutat_numbers[i] else None
+            einheit = zutat_einheiten[i] if zutat_einheiten[i] else None
+            db_write("INSERT INTO zutaten(rezept_id, name, number, einheit) VALUES (%s, %s, %s, %s)",
+                    (rezept_id, zutat_names[i], number, einheit))
+    
+    # Zurück zur Detail-Seite
+    return redirect(url_for("rezept_detail", rezept_id=rezept_id))
+
 
 @app.route("/rezept/<int:rezept_id>", methods=["GET", "POST"])
 @login_required  # Nur eingeloggte Benutzer

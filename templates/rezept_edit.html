@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto; padding: 20px;">
+    <h1>✏️ Rezept bearbeiten</h1>
+    <p style="color: #666;">{{ rezept.name }}</p>
+    
+    <form action="{{ url_for('edit_rezept', rezept_id=rezept.id) }}" method="POST" style="margin-top: 30px;">
+        <!-- Rezeptname -->
+        <div class="form-group">
+            <label for="name">Rezeptname *</label>
+            <input type="text" id="name" name="name" class="form-control" value="{{ rezept.name }}" required />
+        </div>
+
+        <!-- Beschreibung -->
+        <div class="form-group">
+            <label for="description">Beschreibung *</label>
+            <textarea id="description" name="description" class="form-control" rows="2" required>{{ rezept.description }}</textarea>
+        </div>
+
+        <hr>
+
+        <!-- Zutaten -->
+        <div class="form-group">
+            <label>Zutaten</label>
+            <div id="zutaten-container">
+                {% for zutat in zutaten %}
+                <div class="zutat-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <input type="hidden" name="zutat_id[]" value="{{ zutat.id }}">
+                    <input type="text" name="zutat_name[]" class="form-control" placeholder="Zutat" value="{{ zutat.name }}" style="flex: 2;">
+                    <input type="number" name="zutat_number[]" class="form-control" placeholder="Menge" step="0.01" value="{{ zutat.number if zutat.number else '' }}" style="flex: 1;">
+                    <input type="text" name="zutat_einheit[]" class="form-control" placeholder="Einheit" value="{{ zutat.einheit if zutat.einheit else '' }}" style="flex: 1;">
+                    <button type="button" class="btn btn-sm btn-danger" onclick="this.parentElement.remove()" style="flex: 0;">×</button>
+                </div>
+                {% endfor %}
+                
+                <!-- Leere Zeile für neue Zutaten -->
+                <div class="zutat-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <input type="hidden" name="zutat_id[]" value="">
+                    <input type="text" name="zutat_name[]" class="form-control" placeholder="Zutat" style="flex: 2;">
+                    <input type="number" name="zutat_number[]" class="form-control" placeholder="Menge" step="0.01" style="flex: 1;">
+                    <input type="text" name="zutat_einheit[]" class="form-control" placeholder="Einheit" style="flex: 1;">
+                    <button type="button" class="btn btn-sm btn-danger" onclick="this.parentElement.remove()" style="flex: 0;">×</button>
+                </div>
+            </div>
+            <button type="button" class="btn btn-sm btn-default" onclick="addZutat()">
+                + Weitere Zutat hinzufügen
+            </button>
+        </div>
+
+        <hr>
+
+        <!-- Buttons -->
+        <div style="margin-top: 30px;">
+            <button type="submit" class="btn btn-primary btn-lg">💾 Änderungen speichern</button>
+            <a href="{{ url_for('rezept_detail', rezept_id=rezept.id) }}" class="btn btn-default btn-lg">Abbrechen</a>
+        </div>
+    </form>
+</div>
+
+<script>
+// Zutat hinzufügen
+function addZutat() {
+  const container = document.getElementById('zutaten-container');
+  const newRow = document.createElement('div');
+  newRow.className = 'zutat-row';
+  newRow.style.cssText = 'display: flex; gap: 10px; margin-bottom: 10px;';
+  newRow.innerHTML = `
+    <input type="hidden" name="zutat_id[]" value="">
+    <input type="text" name="zutat_name[]" class="form-control" placeholder="Zutat" style="flex: 2;">
+    <input type="number" name="zutat_number[]" class="form-control" placeholder="Menge" step="0.01" style="flex: 1;">
+    <input type="text" name="zutat_einheit[]" class="form-control" placeholder="Einheit" style="flex: 1;">
+    <button type="button" class="btn btn-sm btn-danger" onclick="this.parentElement.remove()" style="flex: 0;">×</button>
+  `;
+  container.appendChild(newRow);
+}
+</script>
+{% endblock %}
