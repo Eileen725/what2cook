@@ -2,7 +2,7 @@
 
 {% block content %}
 <div style="background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-  <h1>� Rezeptsuche mit Zutaten</h1>
+  <h1>Rezeptsuche mit Zutaten</h1>
   <p style="color: #666; margin-top: 10px;">
     Gib Zutaten ein, die du zu Hause hast, und finde passende Rezepte!
   </p>
@@ -10,7 +10,7 @@
   <!-- Suchformular -->
   <form method="POST" style="margin-top: 30px;">
     <div class="form-group">
-      <label for="zutaten">🥗 Welche Zutaten hast du?</label>
+      <label for="zutaten">Welche Zutaten hast du?</label>
       <input type="text" 
              id="zutaten" 
              name="zutaten" 
@@ -21,7 +21,7 @@
              autofocus>
       <p class="help-block">Trenne mehrere Zutaten mit Komma. Drücke Enter zum Suchen.</p>
     </div>
-    <button type="submit" class="btn btn-primary btn-lg">🔍 Rezepte finden</button>
+    <button type="submit" class="btn btn-primary btn-lg">Rezepte finden</button>
   </form>
 
   <!-- Ergebnisse -->
@@ -62,7 +62,7 @@
             <!-- Fehlende Zutaten (Einkaufsliste) -->
             {% if rezept.fehlende_zutaten %}
             <div style="margin-bottom: 15px;">
-              <strong style="color: #f44336;">📝 Einkaufsliste ({{ rezept.fehlende_zutaten|length }})</strong>
+              <strong style="color: #f44336;">Einkaufsliste ({{ rezept.fehlende_zutaten|length }})</strong>
               <ul style="margin: 5px 0 0 20px; padding: 0;">
                 {% for zutat in rezept.fehlende_zutaten %}
                   <li style="color: #f44336;">
@@ -83,7 +83,7 @@
       </div>
     {% else %}
       <div style="text-align: center; padding: 40px; background-color: #fff3cd; border-radius: 8px; border: 1px solid #ffc107;">
-        <h3 style="color: #856404;">🤔 Keine Rezepte gefunden</h3>
+        <h3 style="color: #856404;">Keine Rezepte gefunden</h3>
         <p style="color: #856404; margin-top: 10px;">
           Mit den Zutaten "{{ suchbegriffe }}" wurde leider kein Rezept gefunden.
         </p>
