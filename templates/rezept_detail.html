@@ -2,57 +2,76 @@
 
 {% block content %}
 
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 20px;">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <h1 style="margin: 0;">{{ rezept.name }}</h1>
-            {% if rezept.user_id is none %}
-                <span style="background: #2196F3; color: white; padding: 5px 12px; border-radius: 6px; font-size: 14px;">Allgemeines Rezept</span>
-            {% else %}
-                <span style="background: #4caf50; color: white; padding: 5px 12px; border-radius: 6px; font-size: 14px;">Mein Rezept</span>
-            {% endif %}
-        </div>
-        
-        {% if rezept.user_id is not none and rezept.user_id == current_user_id %}
-        <div style="display: flex; gap: 10px;">
-            <a href="{{ url_for('edit_rezept', rezept_id=rezept.id) }}" class="btn btn-warning">
-                ✏️ Rezept bearbeiten
-            </a>
-            <form action="{{ url_for('delete_rezept', rezept_id=rezept.id) }}" method="POST" onsubmit="return confirm('Möchtest du dieses Rezept wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.');" style="margin: 0;">
-                <button type="submit" class="btn btn-danger">
-                    🗑️ Rezept löschen
-                </button>
-            </form>
-        </div>
+<div style="display: flex; align-items: center; justify-content: space-between; margin-top: 20px;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <h1 style="margin: 0;">{{ rezept.name }}</h1>
+        {% if rezept.user_id is none %}
+            <span style="background: #2196F3; color: white; padding: 5px 12px; border-radius: 6px; font-size: 14px;">
+                Allgemeines Rezept
+            </span>
+        {% else %}
+            <span style="background: #4caf50; color: white; padding: 5px 12px; border-radius: 6px; font-size: 14px;">
+                Mein Rezept
+            </span>
         {% endif %}
     </div>
-    
-    {% if rezept.description %}
-    <p class="lead">{{ rezept.description }}</p>
-    {% endif %}
 
-    <div class="panel panel-default" style="margin-top: 20px;">
-        <div class="panel-heading">
-            <h3 class="panel-title">Zutaten</h3>
-        </div>
-        <div class="panel-body">
-            <ul style="list-style: none; padding: 0;">
-                {% for zutat in zutaten %}
-                    <li style="margin-bottom: 10px; padding: 12px; background: #f9f9f9; border-radius: 5px; border-left: 3px solid #5cb85c;">
-                        <strong>{{ zutat.name }}</strong>
-                        {% if zutat.number or zutat.einheit %}
-                            <span style="color: #666;">
-                                - 
-                                {% if zutat.number %}{{ zutat.number }}{% endif %}
-                                {% if zutat.einheit %}{{ zutat.einheit }}{% endif %}
-                            </span>
-                        {% endif %}
-                    </li>
-                {% else %}
-                    <li>Keine Zutaten vorhanden.</li>
-                {% endfor %}
-            </ul>
-        </div>
+    {% if rezept.user_id is not none and rezept.user_id == current_user_id %}
+    <div style="display: flex; gap: 10px;">
+        <a href="{{ url_for('edit_rezept', rezept_id=rezept.id) }}" class="btn btn-warning">
+            ✏️ Rezept bearbeiten
+        </a>
+        <form action="{{ url_for('delete_rezept', rezept_id=rezept.id) }}" method="POST"
+              onsubmit="return confirm('Rezept wirklich löschen?');" style="margin: 0;">
+            <button type="submit" class="btn btn-danger">🗑️ Löschen</button>
+        </form>
     </div>
+    {% endif %}
+</div>
 
+{% if rezept.description %}
+<p class="lead">{{ rezept.description }}</p>
+{% endif %}
+
+<!-- ZUTATEN -->
+<div class="panel panel-default" style="margin-top: 20px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Zutaten</h3>
+    </div>
+    <div class="panel-body">
+        <ul style="list-style: none; padding: 0;">
+            {% for zutat in zutaten %}
+            <li style="margin-bottom: 10px; padding: 12px; background: #f9f9f9;
+                       border-radius: 5px; border-left: 3px solid #5cb85c;">
+                <strong>{{ zutat.name }}</strong>
+                {% if zutat.number or zutat.einheit %}
+                <span style="color: #666;">
+                    – {{ zutat.number }} {{ zutat.einheit }}
+                </span>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<!-- Rezeptanleitung -->
+<div class="panel panel-default" style="margin-top: 20px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Zubereitung</h3>
+    </div>
+    <div class="panel-body">
+        <ol style="padding-left: 20px;">
+            {% for step in anleitung %}
+            <li style="margin-bottom: 15px; padding: 12px; background: #f9f9f9;
+                       border-radius: 5px; border-left: 3px solid #2196F3;">
+                {{ step.text }}
+            </li>
+            {% else %}
+            <p style="color: #999;">Keine Anleitung vorhanden.</p>
+            {% endfor %}
+        </ol>
+    </div>
+</div>
 
 {% endblock %}
