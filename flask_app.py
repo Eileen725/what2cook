@@ -302,11 +302,21 @@ def edit_rezept(rezept_id):
             einheit = zutat_einheiten[i] if zutat_einheiten[i] else None
             db_write("INSERT INTO zutaten(rezept_id, name, number, einheit) VALUES (%s, %s, %s, %s)",
                     (rezept_id, zutat_names[i], number, einheit))
+
+      # ===== NEU: ZUBEREITUNG SPEICHERN =====
+    steps = request.form.getlist("step_text[]")
+
+    for index, text in enumerate(steps, start=1):
+        if text.strip():
+            db_write(
+                "INSERT INTO rezept_anleitung (rezept_id, step_number, text) VALUES (%s, %s, %s)",
+                (rezept_id, index, text)
+            )
     
     # Zurück zur Detail-Seite
     return redirect(url_for("rezept_detail", rezept_id=rezept_id))
 
-
+  
 @app.route("/rezept/<int:rezept_id>", methods=["GET", "POST"])
 @login_required  # Nur eingeloggte Benutzer
 def rezept_detail(rezept_id):
