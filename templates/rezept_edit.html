@@ -74,5 +74,28 @@ function addZutat() {
   `;
   container.appendChild(newRow);
 }
+
+<h3>Zubereitung</h3>
+
+<div id="steps-container">
+  <textarea name="step_text[]" class="form-control" placeholder="Schritt 1"></textarea>
+</div>
+
+<button type="button" onclick="addStep()" class="btn btn-default">
+  + Schritt hinzufügen
+</button>
+
+<script>
+function addStep() {
+  const div = document.createElement("div");
+  div.style.marginTop = "10px";
+  div.innerHTML = `
+    <textarea name="step_text[]" class="form-control" placeholder="Nächster Schritt"></textarea>
+  `;
+  document.getElementById("steps-container").appendChild(div);
+}
+</script>
+
+
 </script>
 {% endblock %}
