@@ -258,3 +258,6 @@ INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (22, 'Thai-Basilik
 INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (22, 'Fischsauce', 2, 'EL');
 INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (22, 'Limette', 1, 'Stück');
 INSERT INTO zutaten (rezept_id, name, number, einheit) VALUES (22, 'Reis', 300, 'g');
+
+-- Rezept Anleitungen --
+INSERT INTO rezept_anleitung (rezept_id, step_number, text) VALUES (1, 1, 'Mehl in die Schüssel');
