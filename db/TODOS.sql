@@ -22,10 +22,10 @@ CREATE TABLE zutaten (
 );
 
 CREATE TABLE rezept_anleitung (
-  id INTEGER PRIMARY KEY AUTO_INCREMENT,
-  rezept_id INTEGER,
-  step_number INTEGER,
-  text TEXT
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    rezept_id INTEGER,
+    step_number INTEGER,
+    text TEXT
     
 );
 
