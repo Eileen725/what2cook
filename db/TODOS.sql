@@ -21,6 +21,15 @@ CREATE TABLE zutaten (
     FOREIGN KEY (rezept_id) REFERENCES rezepte(id)
 );
 
+CREATE TABLE rezept_anleitung (
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  rezept_id INTEGER,
+  step_number INTEGER,
+  text TEXT
+    
+);
+
+
 -- Beschreibungen von jedem Rezept (kann man noch ändern)
 INSERT INTO rezepte (user_id, name, description) VALUES (NULL, 'Pizza', 'Klassischer Pizzateig mit Tomatensauce und Käse');
 INSERT INTO rezepte (user_id, name, description) VALUES (NULL, 'Spaghetti', 'Spaghetti mit Butter - Kindheistklassiker');
