@@ -75,27 +75,27 @@ function addZutat() {
   container.appendChild(newRow);
 }
 
-<h3>Zubereitung</h3>
-
-<div id="steps-container">
-  <textarea name="step_text[]" class="form-control" placeholder="Schritt 1"></textarea>
-</div>
-
-<button type="button" onclick="addStep()" class="btn btn-default">
-  + Schritt hinzufügen
-</button>
-
-<script>
-function addStep() {
-  const div = document.createElement("div");
-  div.style.marginTop = "10px";
-  div.innerHTML = `
-    <textarea name="step_text[]" class="form-control" placeholder="Nächster Schritt"></textarea>
-  `;
-  document.getElementById("steps-container").appendChild(div);
-}
-</script>
-
+ <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 20px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <h1 style="margin: 0;">{{ rezept.name }}</h1>
+            {% if rezept.user_id is none %}
+                <span style="background: #2196F3; color: white; padding: 5px 12px; border-radius: 6px; font-size: 14px;">Allgemeines Rezept</span>
+            {% else %}
+                <span style="background: #4caf50; color: white; padding: 5px 12px; border-radius: 6px; font-size: 14px;">Mein Rezept</span>
+            {% endif %}
+        </div>
+        
+        {% if rezept.user_id is not none and rezept.user_id == current_user_id %}
+        <div style="display: flex; gap: 10px;">
+            <a href="{{ url_for('edit_rezept', rezept_id=rezept.id) }}" class="btn btn-warning">
+                ✏️ Rezept bearbeiten
+            </a>
+            <form action="{{ url_for('delete_rezept', rezept_id=rezept.id) }}" method="POST" onsubmit="return confirm('Möchtest du dieses Rezept wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.');" style="margin: 0;">
+                <button type="submit" class="btn btn-danger">
+                    🗑️ Rezept löschen
+                </button>
+            </form>
+        </div>
 
 </script>
 {% endblock %}
