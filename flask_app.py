@@ -44,10 +44,16 @@ def webhook():
     """Empfängt GitHub Push-Events und aktualisiert den Server automatisch"""
     x_hub_signature = request.headers.get('X-Hub-Signature')  # Holt Signatur aus Header
     if is_valid_signature(x_hub_signature, request.data, W_SECRET):  # Prüft Signatur
-        repo = git.Repo('./mysite')  # Öffnet Git-Repository
-        origin = repo.remotes.origin  # Holt Remote-Verbindung
-        origin.pull()  # Pullt neueste Änderungen von GitHub
-        return 'Updated PythonAnywhere successfully', 200
+        try:
+            # Versucht das Repository im aktuellen Verzeichnis zu öffnen
+            repo = git.Repo('.')  # Öffnet Git-Repository im aktuellen Verzeichnis
+            origin = repo.remotes.origin  # Holt Remote-Verbindung
+            origin.pull()  # Pullt neueste Änderungen von GitHub
+            logging.info("Webhook: Repository erfolgreich aktualisiert")
+            return 'Updated PythonAnywhere successfully', 200
+        except Exception as e:
+            logging.error(f"Webhook-Fehler beim Git-Pull: {e}")
+            return f'Error during deployment: {str(e)}', 500
     return 'Unathorized', 401  # Fehlgeschlagen wenn Signatur falsch
 
 # ===== AUTHENTIFIZIERUNGS-ROUTES =====
