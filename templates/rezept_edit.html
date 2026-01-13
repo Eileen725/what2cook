@@ -50,6 +50,19 @@
 
         <hr>
 
+        <!-- Zubereitung -->
+        <div class="form-group">
+            <label>Zubereitung</label>
+            <div id="steps-container">
+                <textarea name="step_text[]" class="form-control" placeholder="Schritt 1"></textarea>
+            </div>
+            <button type="button" onclick="addStep()" class="btn btn-sm btn-default" style="margin-top: 10px;">
+                + Schritt hinzufügen
+            </button>
+        </div>
+
+        <hr>
+
         <!-- Buttons -->
         <div style="margin-top: 30px;">
             <button type="submit" class="btn btn-primary btn-lg">💾 Änderungen speichern</button>
@@ -57,16 +70,6 @@
         </div>
     </form>
 </div>
-
-<h3>Zubereitung</h3>
-
-<div id="steps-container">
-  <textarea name="step_text[]" class="form-control" placeholder="Schritt 1"></textarea>
-</div>
-
-<button type="button" onclick="addStep()" class="btn btn-default">
-  + Schritt hinzufügen
-</button>
 
 <script>
 // Zutat hinzufügen
@@ -94,4 +97,5 @@ function addStep() {
   document.getElementById("steps-container").appendChild(div);
 }
 </script>
+
 {% endblock %}
