@@ -57,7 +57,7 @@
                 {% for step in anleitung %}
                 <textarea name="step_text[]" class="form-control" placeholder="Schritt {{ loop.index }}" style="margin-bottom: 10px;">{{ step.text }}</textarea>
                 {% endfor %}
-                <textarea name="step_text[]" class="form-control" placeholder="Schritt 1"></textarea>
+                <textarea name="step_text[]" class="form-control" placeholder="Schritt {{ anleitung|length + 1 }}" style="margin-bottom: 10px;"></textarea>
             </div>
             <button type="button" onclick="addStep()" class="btn btn-sm btn-default" style="margin-top: 10px;">
                 + Schritt hinzufügen
@@ -92,12 +92,16 @@ function addZutat() {
 }
 
 function addStep() {
+  const container = document.getElementById('steps-container');
+  const textareas = container.querySelectorAll('textarea');
+  const nextNumber = textareas.length + 1;
+  
   const div = document.createElement("div");
   div.style.marginTop = "10px";
   div.innerHTML = `
-    <textarea name="step_text[]" class="form-control" placeholder="Nächster Schritt"></textarea>
+    <textarea name="step_text[]" class="form-control" placeholder="Schritt ${nextNumber}"></textarea>
   `;
-  document.getElementById("steps-container").appendChild(div);
+  container.appendChild(div);
 }
 </script>
 
