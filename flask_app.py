@@ -276,7 +276,9 @@ def edit_rezept(rezept_id):
     if request.method == "GET":
         # Lädt alle Zutaten für dieses Rezept
         zutaten = db_read("SELECT id, name, number, einheit FROM zutaten WHERE rezept_id=%s", (rezept_id,))
-        return render_template("rezept_edit.html", rezept=rezept, zutaten=zutaten)
+        # Lädt alle Schritte der Anleitung
+        anleitung = db_read("SELECT step_number, text FROM rezept_anleitung WHERE rezept_id=%s ORDER BY step_number", (rezept_id,))
+        return render_template("rezept_edit.html", rezept=rezept, zutaten=zutaten, anleitung=anleitung)
     
     # POST: Speichert die Änderungen
     name = request.form["name"]
@@ -304,6 +306,9 @@ def edit_rezept(rezept_id):
                     (rezept_id, zutat_names[i], number, einheit))
     
     # ===== NEU: ZUBEREITUNG SPEICHERN ===== 
+    # Löscht alte Schritte
+    db_write("DELETE FROM rezept_anleitung WHERE rezept_id=%s", (rezept_id,))
+    
     steps = request.form.getlist("step_text[]")
 
     for index, text in enumerate(steps, start=1):
@@ -332,11 +337,14 @@ def rezept_detail(rezept_id):
     if not rezept:
         return "Rezept nicht gefunden", 404
     
-   # Lädt alle Zutaten für dieses Rezept
+    # Lädt alle Zutaten für dieses Rezept
     zutaten = db_read("SELECT id, name, number, einheit FROM zutaten WHERE rezept_id=%s", (rezept_id,))
     
-    # Zeigt Template mit Rezept und Zutaten an
-    return render_template("rezept_detail.html", rezept=rezept, zutaten=zutaten, current_user_id=current_user.id)
+    # Lädt alle Schritte der Anleitung
+    anleitung = db_read("SELECT step_number, text FROM rezept_anleitung WHERE rezept_id=%s ORDER BY step_number", (rezept_id,))
+    
+    # Zeigt Template mit Rezept, Zutaten und Anleitung an
+    return render_template("rezept_detail.html", rezept=rezept, zutaten=zutaten, anleitung=anleitung, current_user_id=current_user.id)
 
 if __name__ == "__main__":
     # Startet den Flask Development Server

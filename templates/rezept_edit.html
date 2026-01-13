@@ -54,6 +54,9 @@
         <div class="form-group">
             <label>Zubereitung</label>
             <div id="steps-container">
+                {% for step in anleitung %}
+                <textarea name="step_text[]" class="form-control" placeholder="Schritt {{ loop.index }}" style="margin-bottom: 10px;">{{ step.text }}</textarea>
+                {% endfor %}
                 <textarea name="step_text[]" class="form-control" placeholder="Schritt 1"></textarea>
             </div>
             <button type="button" onclick="addStep()" class="btn btn-sm btn-default" style="margin-top: 10px;">
