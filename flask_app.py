@@ -303,7 +303,7 @@ def edit_rezept(rezept_id):
             db_write("INSERT INTO zutaten(rezept_id, name, number, einheit) VALUES (%s, %s, %s, %s)",
                     (rezept_id, zutat_names[i], number, einheit))
     
-    # ===== NEU: ZUBEREITUNG SPEICHERN =====
+    # ===== NEU: ZUBEREITUNG SPEICHERN ===== 
     steps = request.form.getlist("step_text[]")
 
     for index, text in enumerate(steps, start=1):
