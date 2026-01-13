@@ -316,7 +316,7 @@ def edit_rezept(rezept_id):
     # Zurück zur Detail-Seite
     return redirect(url_for("rezept_detail", rezept_id=rezept_id))
 
-  
+
 @app.route("/rezept/<int:rezept_id>", methods=["GET", "POST"])
 @login_required  # Nur eingeloggte Benutzer
 def rezept_detail(rezept_id):
