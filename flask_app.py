@@ -44,16 +44,10 @@ def webhook():
     """Empfängt GitHub Push-Events und aktualisiert den Server automatisch"""
     x_hub_signature = request.headers.get('X-Hub-Signature')  # Holt Signatur aus Header
     if is_valid_signature(x_hub_signature, request.data, W_SECRET):  # Prüft Signatur
-        try:
-            # Versucht das Repository im aktuellen Verzeichnis zu öffnen
-            repo = git.Repo('.')  # Öffnet Git-Repository im aktuellen Verzeichnis
-            origin = repo.remotes.origin  # Holt Remote-Verbindung
-            origin.pull()  # Pullt neueste Änderungen von GitHub
-            logging.info("Webhook: Repository erfolgreich aktualisiert")
-            return 'Updated PythonAnywhere successfully', 200
-        except Exception as e:
-            logging.error(f"Webhook-Fehler beim Git-Pull: {e}")
-            return f'Error during deployment: {str(e)}', 500
+        repo = git.Repo('./mysite')  # Öffnet Git-Repository
+        origin = repo.remotes.origin  # Holt Remote-Verbindung
+        origin.pull()  # Pullt neueste Änderungen von GitHub
+        return 'Updated PythonAnywhere successfully', 200
     return 'Unathorized', 401  # Fehlgeschlagen wenn Signatur falsch
 
 # ===== AUTHENTIFIZIERUNGS-ROUTES =====
@@ -309,6 +303,16 @@ def edit_rezept(rezept_id):
             db_write("INSERT INTO zutaten(rezept_id, name, number, einheit) VALUES (%s, %s, %s, %s)",
                     (rezept_id, zutat_names[i], number, einheit))
     
+    # ===== NEU: ZUBEREITUNG SPEICHERN ===== 
+    steps = request.form.getlist("step_text[]")
+
+    for index, text in enumerate(steps, start=1):
+        if text.strip():
+            db_write(
+                "INSERT INTO rezept_anleitung (rezept_id, step_number, text) VALUES (%s, %s, %s)",
+                (rezept_id, index, text)
+            )
+    
     # Zurück zur Detail-Seite
     return redirect(url_for("rezept_detail", rezept_id=rezept_id))
 
@@ -328,12 +332,11 @@ def rezept_detail(rezept_id):
     if not rezept:
         return "Rezept nicht gefunden", 404
     
-    # Lädt alle Zutaten für dieses Rezept
+   # Lädt alle Zutaten für dieses Rezept
     zutaten = db_read("SELECT id, name, number, einheit FROM zutaten WHERE rezept_id=%s", (rezept_id,))
     
     # Zeigt Template mit Rezept und Zutaten an
     return render_template("rezept_detail.html", rezept=rezept, zutaten=zutaten, current_user_id=current_user.id)
-
 
 if __name__ == "__main__":
     # Startet den Flask Development Server
