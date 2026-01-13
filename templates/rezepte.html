@@ -2,65 +2,131 @@
 
 {% block content %}
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-   <h2 style="margin: 0;">Rezepte</h2>
+  <h2 style="margin: 0;">Rezepte</h2>
   <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addRecipeModal">
     + Rezept hinzufügen
   </button>
 </div>
 
-<ul class="rezept-list">
+<!-- Suchfeld -->
+<div style="margin-bottom: 20px;">
+  <input type="text" 
+         id="search-input" 
+         class="form-control" 
+         placeholder="🔍 Rezepte durchsuchen..." 
+         style="font-size: 16px; padding: 12px;">
+</div>
+
+<!-- Rezeptliste -->
+<ul class="rezept-list" id="rezept-list">
   {% for rezept in rezepte %}
-  <li class="rezept-item">
+  <li class="rezept-item" data-name="{{ rezept.name|lower }}" data-description="{{ rezept.description|lower }}">
     <a href="{{ url_for('rezept_detail', rezept_id=rezept.id) }}" class="rezept-content">
+      {% if rezept.user_id is none %}
+        <span style="background: #2196F3; color: white; padding: 3px 8px; border-radius: 4px; font-size: 11px; margin-right: 8px;">🌍 Allgemein</span>
+      {% endif %}
       {{ rezept.name }}
       <span class="rezept-description">{{ rezept.description }}</span>
     </a>
   </li>
+  {% else %}
+  <div id="no-recipes">Keine Rezepte vorhanden...</div>
   {% endfor %}
 </ul>
 
-<!-- MODAL: Neues Rezept -->
-<div class="modal fade" id="addRecipeModal">
-  <div class="modal-dialog modal-lg">
+<div id="no-results" style="display: none; text-align: center; padding: 30px; color: #999;">
+  Keine Rezepte gefunden
+</div>
+
+<!-- Modal für neues Rezept -->
+<div class="modal fade" id="addRecipeModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-
-      <form method="POST">
-
       <div class="modal-header">
-        <h4 class="modal-title">Neues Rezept</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Neues Rezept hinzufügen</h4>
       </div>
+      <form action="{{ url_for('meine_rezepte') }}" method="POST">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="name">Rezeptname *</label>
+            <input type="text" id="name" name="name" class="form-control" placeholder="z.B. Spaghetti Carbonara" required />
+          </div>
 
-      <div class="modal-body">
+          <div class="form-group">
+            <label for="description">Beschreibung *</label>
+            <textarea id="description" name="description" class="form-control" rows="2" placeholder="Kurze Beschreibung des Rezepts" required></textarea>
+          </div>
 
-        <div class="form-group">
-          <label>Rezeptname</label>
-          <input name="name" class="form-control" required>
-        </div>
+          <hr>
 
-        <div class="form-group">
-          <label>Beschreibung</label>
-          <textarea name="description" class="form-control" rows="2" required></textarea>
-        </div>
-
-        <hr>
-
-        <label>Zutaten</label>
-        <div id="zutaten-container">
-          <div style="display:flex; gap:10px; margin-bottom:10px;">
-            <input name="zutat_name[]" class="form-control" placeholder="Zutat">
-            <input name="zutat_number[]" type="number" class="form-control" placeholder="Menge">
-            <input name="zutat_einheit[]" class="form-control" placeholder="Einheit">
+          <div class="form-group">
+            <label>Zutaten</label>
+            <div id="zutaten-container">
+              <div class="zutat-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <input type="text" name="zutat_name[]" class="form-control" placeholder="Zutat" style="flex: 2;">
+                <input type="number" name="zutat_number[]" class="form-control" placeholder="Menge" step="0.01" style="flex: 1;">
+                <input type="text" name="zutat_einheit[]" class="form-control" placeholder="Einheit" style="flex: 1;">
+              </div>
+            </div>
+            <button type="button" class="btn btn-sm btn-default" onclick="addZutat()">
+              + Weitere Zutat hinzufügen
+            </button>
           </div>
         </div>
-        <hr>
-
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Rezept speichern</button>
-      </div>
-
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+          <button type="submit" class="btn btn-primary">Rezept speichern</button>
+        </div>
       </form>
-
     </div>
   </div>
 </div>
+
+<script>
+// Zutat hinzufügen
+function addZutat() {
+  const container = document.getElementById('zutaten-container');
+  const newRow = document.createElement('div');
+  newRow.className = 'zutat-row';
+  newRow.style.cssText = 'display: flex; gap: 10px; margin-bottom: 10px;';
+  newRow.innerHTML = `
+    <input type="text" name="zutat_name[]" class="form-control" placeholder="Zutat" style="flex: 2;">
+    <input type="number" name="zutat_number[]" class="form-control" placeholder="Menge" step="0.01" style="flex: 1;">
+    <input type="text" name="zutat_einheit[]" class="form-control" placeholder="Einheit" style="flex: 1;">
+    <button type="button" class="btn btn-sm btn-danger" onclick="this.parentElement.remove()" style="flex: 0;">×</button>
+  `;
+  container.appendChild(newRow);
+}
+
+// Live-Suche für Rezepte
+document.getElementById('search-input').addEventListener('input', function(e) {
+  const searchTerm = e.target.value.toLowerCase().trim();
+  const rezeptItems = document.querySelectorAll('.rezept-item');
+  const noResults = document.getElementById('no-results');
+  let visibleCount = 0;
+
+  rezeptItems.forEach(function(item) {
+    const name = item.getAttribute('data-name');
+    const description = item.getAttribute('data-description');
+    
+    // Prüfe ob Suchbegriff in Name oder Beschreibung vorkommt
+    if (name.includes(searchTerm) || description.includes(searchTerm)) {
+      item.style.display = 'block';
+      visibleCount++;
+    } else {
+      item.style.display = 'none';
+    }
+  });
+
+  // Zeige "Keine Ergebnisse" wenn nichts gefunden wurde
+  if (visibleCount === 0 && searchTerm !== '') {
+    noResults.style.display = 'block';
+  } else {
+    noResults.style.display = 'none';
+  }
+});
+</script>
 {% endblock %}
